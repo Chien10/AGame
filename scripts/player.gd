@@ -1,19 +1,12 @@
-extends Node2D
+extends CharacterBody2D
 
-var speed := 200
+@export var speed: float = 200.0 # Movement speed in pixels per second
 
-func _ready():
-    print("Ready to play!")
-
-func _process(delta):
-    var direction = Vector2.ZERO
-    if Input.is_action_pressed("ui_right"):
-        direction.x += 1
-    if Input.is_action_pressed("ui_left"):
-        direction.x -= 1
-    if Input.is_action_pressed("ui_down"):
-        direction.y += 1
-    if Input.is_action_pressed("ui_up"):
-        direction.y -= 1
+# Called every physics frame. Handles player movement.
+func _physics_process(delta):
+    var direction := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
     if direction != Vector2.ZERO:
-        position += direction.normalized() * speed * delta
+        velocity = direction * speed
+    else:
+        velocity = Vector2.ZERO
+    move_and_slide()
